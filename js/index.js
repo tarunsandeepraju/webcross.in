@@ -5,7 +5,7 @@ $(document).ready(function () {
         setTimeout(function () {
                 $("#preloader").hide();
                 $("#mainview").fadeIn();
-                $(".nav").addClass("animate__animated animate__bounceInDown");
+                $(".nav").addClass("animate_animated animate_bounceInDown");
             }, 3000);
         });
 
@@ -108,13 +108,7 @@ $(document).ready(function () {
     //Find Donors
     $("#error,#record").hide();
     $("#find").click(function () {
-        $("#find").text("Finding Nearest Donors...")
-        setTimeout(function () {
-            $("#shell").hide();
-            $("#find").text("Find")
-            $("#detailsview").fadeIn();
             showdetails();
-        }, 3000)
     })
 
     function showdetails(){
@@ -123,7 +117,12 @@ $(document).ready(function () {
         let area=$("#citySearch").val();
         let bloodgroup=$("#bloodgroup").val();
         if(state!==""&&district!==""&&area!==""&&bloodgroup!=="")
-        {   console.log(state,district,area,bloodgroup)
+        {   $("#find").text("Finding Nearest Donors...")
+            setTimeout(function () {
+                $("#shell,#error").hide();
+                $("#find").text("Find")
+                $("#detailsview").fadeIn();
+        
             $.ajax({
                 url:"retrievedonor.php",
                 method: "POST",
@@ -143,7 +142,7 @@ $(document).ready(function () {
                         console.log(data)
                         x = data;
                         for (i = 0; i < x.length; i++) {
-                            output += "<div class=\"container mb-3 pl-3 bg-light shadow border-danger animate__animated animate__flipInX\"\n" +
+                            output += "<div class=\"container mb-3 pl-3 bg-light shadow border-danger animate_animated animate_flipInX\"\n" +
                                 "         style=\"opacity: 90%; border-radius: 10px;min-height: 30vh\">\n" +
                                 "        <div class=\"row\">\n" +
                                 "            <div class=\"col-8\">\n" +
@@ -170,19 +169,21 @@ $(document).ready(function () {
                                 "    </div>"
                         }
                         $("#detailsview").html(output);
-                        $("#shell").hide();
-                        $("#detailsview").fadeIn();
+            
+                
                     }
                     else {
                         output = "No Donor found";
                         $("#record").html("<h1>"+output+"</h1><p class='text-primary mb-2'>Click on Home</p>");
                         $("#record").fadeIn();
+                        $("#detailsview").hide();
                     }
                 },
                 error:function (data){
                     console.log(data)
                 }
             })
+        }, 3000)
         }
         else{
             $("#error").text("Fill all Details")
